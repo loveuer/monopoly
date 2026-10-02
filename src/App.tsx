@@ -312,8 +312,8 @@ export default function App() {
                 )}
                 <div className="scene-bottom">
                   <span>
-                    <Icon name="Orbit" size={14} /> 拖动旋转 · 滚轮缩放 ·
-                    点击探索
+                    <Icon name="Orbit" size={14} /> 拖动旋转 · 右键 / 双指平移 ·
+                    滚轮缩放
                   </span>
                   <button
                     className="icon-button"
@@ -575,7 +575,9 @@ export default function App() {
                         <small>步</small>
                       </span>
                     </div>
-                    <span className="board-tip">拖动旋转 / 滚轮缩放</span>
+                    <span className="board-tip">
+                      拖动旋转 / 右键平移 / 滚轮缩放
+                    </span>
                   </div>
                 </div>
                 <TurnPanel

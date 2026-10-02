@@ -314,6 +314,43 @@ test("city map is keyboard-accessible and opens tile details", async ({
   await expect(page.locator(".tile-info")).toContainText("榕树老街");
   await expect(page.locator(".tile-info")).toContainText("₡100");
 });
+test("board camera pans with a right drag and recenters when cycling views", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const canvas = page.locator("canvas");
+  await expect(canvas).toBeVisible();
+  await expect
+    .poll(() =>
+      canvas.evaluate((c: HTMLCanvasElement) =>
+        c.getContext("webgl2")?.isContextLost(),
+      ),
+    )
+    .toBe(false);
+  await page.mouse.move(0, 0);
+  const before = await canvas.screenshot();
+  const bounds = (await canvas.boundingBox())!;
+  await page.mouse.move(
+    bounds.x + bounds.width / 2,
+    bounds.y + bounds.height / 2,
+  );
+  await page.mouse.down({ button: "right" });
+  await page.mouse.move(
+    bounds.x + bounds.width / 2 + 120,
+    bounds.y + bounds.height / 2 + 60,
+    { steps: 10 },
+  );
+  await page.mouse.up({ button: "right" });
+  await page.mouse.move(0, 0);
+  const after = await canvas.screenshot();
+  expect(after.equals(before), "平移应改变棋盘画面").toBe(false);
+  for (let i = 0; i < 3; i++)
+    await page.getByRole("button", { name: "切换棋盘视角" }).click();
+  await page.mouse.move(0, 0);
+  await expect
+    .poll(async () => (await canvas.screenshot()).equals(before))
+    .toBe(true);
+});
 test("mobile setup, 3D board, cards and dialogs fit without horizontal overflow", async ({
   page,
 }) => {

@@ -506,9 +506,11 @@ function CameraRig({ view }: { view: number }) {
   }, [view, camera, size.width, size.height]);
   return (
     <OrbitControls
+      key={`${view}-${size.width}-${size.height}`}
       makeDefault
       target={[0, -1.25, 0]}
-      enablePan={false}
+      enablePan
+      screenSpacePanning={false}
       minDistance={10}
       maxDistance={38}
       minPolarAngle={0.08}
